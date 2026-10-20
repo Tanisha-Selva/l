@@ -1,0 +1,85 @@
+SELENIUM LOGIN TESTING – ECLIPSE STEPS
+
+1. CREATE LOGIN PAGE
+- Open VS Code or Notepad.
+- Paste the login.html code.
+- Save it anywhere, for example:
+  D:\SeleniumLab\login.html
+- Open it in a browser to check the page.
+
+Login credentials:
+Username: admin
+Password: 1234
+
+2. CREATE JAVA PROJECT IN ECLIPSE
+- Open Eclipse.
+- Select your workspace.
+- Click File → New → Java Project.
+- Enter project name: SeleniumLab.
+- Click Finish.
+
+3. CREATE JAVA CLASS
+- Expand SeleniumLab in Package Explorer.
+- Right-click src → New → Class.
+- Class name: LoginTest.
+- Tick public static void main(String[] args).
+- Click Finish.
+
+4. ADD SELENIUM LIBRARY
+- Selenium must be configured before running the program.
+- If Selenium is already available in the lab project, use that setup.
+- If imports show red errors, Selenium libraries are missing or not configured.
+- If required, right-click the project → Build Path → Configure Build Path → Libraries to add the provided Selenium JAR files.
+
+5. PASTE JAVA CODE
+- Open LoginTest.java.
+- Replace the generated code with the Selenium login test code.
+- Save using Ctrl + S.
+
+6. SET HTML FILE PATH
+In Java, use the actual location of login.html.
+
+Example:
+driver.get("file:///D:/SeleniumLab/login.html");
+
+Use forward slashes in the file URL.
+
+7. RUN THE PROGRAM
+- Right-click inside LoginTest.java.
+- Select Run As → Java Application.
+- Chrome should open automatically.
+- Selenium enters the username and password.
+- Selenium clicks the Login button.
+- The result is checked and printed in the Console.
+
+Expected output:
+Test Passed
+
+8. TEST INVALID LOGIN
+Use:
+Username: admin
+Password: wrong
+
+Expected webpage message:
+Invalid Login
+
+If Java checks for "Invalid Login", the console should print:
+Test Passed
+
+9. IMPORTANT SELENIUM COMMANDS
+new ChromeDriver() – Opens Chrome.
+driver.get() – Opens a webpage.
+findElement(By.id()) – Finds an element by ID.
+sendKeys() – Enters text.
+click() – Clicks a button.
+getText() – Gets displayed text.
+quit() – Closes the browser.
+
+TROUBLESHOOTING
+- Red imports: Check Selenium library configuration.
+- Chrome does not open: Check Chrome and driver setup.
+- File not found: Check the login.html path.
+- No Run option: Check Java project and class configuration.
+
+NOTE:
+Selenium setup and browser-driver configuration must be available before the program can run. Use the Selenium files and instructions provided by the lab if available.

@@ -1,0 +1,9 @@
+Now adapt my existing working project to this Web Technology lab question:
+
+[PASTE THE EXACT QUESTION HERE]
+
+Keep the existing AngularJS + Node.js/Express + MongoDB architecture. Implement every specific requirement in the question, including services, dependency injection, filters, ngAnimate, two-way binding, and MongoDB CRUD wherever required.
+
+Change only the necessary fields, service methods, frontend functionality, and backend routes. Keep the code simple, minimal, and student-friendly. Do not remove any required CRUD functionality or add unnecessary features.
+
+After making the changes, explain exactly how to run and test the application, including the MongoDB database and collection names.

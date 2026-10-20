@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Record Manager</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 25px;
+        }
+
+        input, select, button {
+            margin: 5px;
+            padding: 6px;
+        }
+
+        .record {
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .record.ng-enter {
+            transition: 0.5s;
+            opacity: 0;
+        }
+
+        .record.ng-enter-active {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body ng-controller="MainController">
+
+    <h2>Record Manager</h2>
+
+    <form ng-submit="saveRecord()">
+        <input type="text" ng-model="form.title"
+               placeholder="Title" required>
+
+        <input type="number" ng-model="form.amount"
+               placeholder="Amount" required>
+
+        <input type="text" ng-model="form.category"
+               placeholder="Category" required>
+
+        <input type="date" ng-model="form.date" required>
+
+        <button type="submit">
+            {{ form._id ? 'Update' : 'Add' }}
+        </button>
+
+        <button type="button" ng-click="clearForm()">
+            Clear
+        </button>
+    </form>
+
+    <h3>Records</h3>
+
+    <label>Filter by category:</label>
+    <select ng-model="selectedCategory">
+        <option value="">All</option>
+        <option ng-repeat="c in categories" value="{{c}}">
+            {{c}}
+        </option>
+    </select>
+
+    <div class="record"
+         ng-repeat="r in records | filter:{category:selectedCategory} track by r._id">
+
+        <b>{{r.title}}</b> -
+        {{r.amount | currency:'₹'}}
+        - {{r.category}}
+        - {{r.date | date:'dd-MM-yyyy'}}
+
+        <button ng-click="editRecord(r)">Edit</button>
+        <button ng-click="deleteRecord(r._id)">Delete</button>
+    </div>
+
+    <p ng-if="records.length == 0">No records available.</p>
+
+    <script>
+        var app = angular.module("myApp", ["ngAnimate"]);
+
+        // SERVICE
+        app.service("RecordService", function($http) {
+            this.getAll = function() {
+                return $http.get("/api/records");
+            };
+
+            this.add = function(record) {
+                return $http.post("/api/records", record);
+            };
+
+            this.update = function(id, record) {
+                return $http.put("/api/records/" + id, record);
+            };
+
+            this.delete = function(id) {
+                return $http.delete("/api/records/" + id);
+            };
+        });
+
+        // CONTROLLER
+        app.controller("MainController", function($scope, RecordService) {
+            $scope.records = [];
+            $scope.form = {};
+            $scope.selectedCategory = "";
+
+            $scope.loadRecords = function() {
+                RecordService.getAll().then(function(response) {
+                    $scope.records = response.data;
+
+                    $scope.categories = [
+                        ...new Set($scope.records.map(r => r.category))
+                    ];
+                });
+            };
+
+            $scope.saveRecord = function() {
+                var data = {
+                    title: $scope.form.title,
+                    amount: $scope.form.amount,
+                    category: $scope.form.category,
+                    date: $scope.form.date
+                };
+
+                var request;
+
+                if ($scope.form._id) {
+                    request = RecordService.update($scope.form._id, data);
+                } else {
+                    request = RecordService.add(data);
+                }
+
+                request.then(function() {
+                    $scope.clearForm();
+                    $scope.loadRecords();
+                });
+            };
+
+            $scope.editRecord = function(record) {
+                $scope.form = angular.copy(record);
+                $scope.form.date = new Date(record.date);
+            };
+
+            $scope.deleteRecord = function(id) {
+                RecordService.delete(id).then(function() {
+                    $scope.loadRecords();
+                });
+            };
+
+            $scope.clearForm = function() {
+                $scope.form = {};
+            };
+
+            $scope.loadRecords();
+        });
+    </script>
+
+</body>
+</html>

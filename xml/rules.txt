@@ -1,0 +1,85 @@
+XML, DTD AND XSLT - QUICK NOTES
+
+1. INTERNAL DTD
+DTD declarations are written inside the XML file.
+
+Syntax:
+<!DOCTYPE students [
+    <!ELEMENT students (student+)>
+    <!ELEMENT student (name, department, mark)>
+    <!ELEMENT name (#PCDATA)>
+    <!ELEMENT department (#PCDATA)>
+    <!ELEMENT mark (#PCDATA)>
+]>
+
+2. EXTERNAL DTD
+DTD declarations are written in a separate .dtd file.
+
+student.dtd:
+<!ELEMENT students (student+)>
+<!ELEMENT student (name, department, mark)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT department (#PCDATA)>
+<!ELEMENT mark (#PCDATA)>
+
+In XML:
+<!DOCTYPE students SYSTEM "student.dtd">
+
+Keep the XML and DTD files in the same folder.
+
+3. DTD SYMBOLS
++ = One or more
+* = Zero or more
+? = Zero or one
+, = Elements in order
+| = Either/or
+#PCDATA = Text content
+
+4. CHANGING DTD
+Change element names according to the question.
+
+Example:
+For employee details:
+<!ELEMENT employees (employee+)>
+<!ELEMENT employee (id, name, salary)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT salary (#PCDATA)>
+
+The DTD structure must match the XML structure.
+
+5. XSLT
+In XML, link the stylesheet:
+<?xml-stylesheet type="text/xsl" href="table.xsl"?>
+
+Change the filename according to the required output.
+
+Table: <table>, <tr>, <th>, <td>
+Unordered list: <ul>, <li>
+Ordered list: <ol>, <li>
+Details: <h3>, <p>
+Sort: <xsl:sort>
+Filter: <xsl:if>
+
+Loop:
+<xsl:for-each select="students/student">
+
+Display name:
+<xsl:value-of select="name"/>
+
+Sort marks descending:
+<xsl:sort select="mark" data-type="number" order="descending"/>
+
+Filter IT students:
+<xsl:if test="department='IT'">
+    Output here
+</xsl:if>
+
+6. IMPORTANT
+- Save all files before running.
+- Keep linked files in the same folder.
+- XML opening and closing tags must match.
+- If data or element names change, update the DTD and XSLT paths as needed.
+- Internal DTD is inside XML; external DTD is in a separate file.
+- XSLT transforms XML into formatted output.
+- CSS styles the displayed content.

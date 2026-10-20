@@ -1,0 +1,26 @@
+
+students {
+    display: block;
+    font-family: Arial;
+    margin: 20px;
+}
+
+student {
+    display: block;
+    margin: 15px 0;
+}
+
+name, department, mark {
+    display: block;
+    margin: 6px 0;
+}
+
+name {
+    font-size: 20px;
+    font-weight: bold;
+    color: blue;
+}
+
+department, mark {
+    font-size: 16px;
+}

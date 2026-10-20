@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="filtered.xsl"?>
+<students>
+    <student>
+        <name>Arun</name>
+        <department>IT</department>
+        <mark>90</mark>
+    </student>
+    <student>
+        <name>Priya</name>
+        <department>CSE</department>
+        <mark>85</mark>
+    </student>
+    <student>
+        <name>Meena</name>
+        <department>ECE</department>
+        <mark>92</mark>
+    </student>
+</students>
