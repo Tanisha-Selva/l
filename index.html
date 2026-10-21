@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html ng-app="quizApp">
+<head>
+    <title>Online Quiz System</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: Arial; background:#f2f2f2; padding:30px; }
+        .container { width:700px; margin:auto; background:white; padding:25px; border-radius:10px; }
+        h1 { text-align:center; }
+        .question { border:1px solid #ccc; padding:15px; margin-bottom:20px; border-radius:8px; }
+        .option { display:block; margin:10px; }
+        button { padding:10px 20px; margin-top:15px; }
+        .result { margin-top:20px; padding:20px; background:#dff0d8; }
+        .error { color:red; }
+    </style>
+</head>
+<body ng-controller="QuizController">
+<div class="container">
+    <h1>Online Quiz</h1>
+
+    <form name="quizForm" ng-submit="submitQuiz()" novalidate>
+        <div class="question" ng-repeat="q in questions">
+            <h3>{{$index + 1}}. {{q.question}}</h3>
+
+            <label class="option" ng-repeat="option in q.options">
+                <input type="radio"
+                       name="question{{$parent.$index}}"
+                       ng-model="answers[$parent.$index]"
+                       ng-value="option"
+                       required>
+                {{option}}
+            </label>
+        </div>
+
+        <p class="error" ng-if="quizForm.$submitted && quizForm.$invalid">
+            Please answer all questions.
+        </p>
+
+        <button type="submit">Submit Quiz</button>
+    </form>
+
+    <div class="result" ng-if="submitted">
+        <h2>Quiz Result</h2>
+        <p>Score: {{score}} / {{questions.length}}</p>
+        <p>Percentage: {{(score / questions.length) * 100}}%</p>
+        <button ng-click="restartQuiz()">Try Again</button>
+    </div>
+
+    <br>
+    <a href="admin.html">Go to Admin Page</a>
+</div>
+
+<script>
+var app = angular.module("quizApp", []);
+
+app.service("QuizService", function($http) {
+    this.getQuestions = function() {
+        return $http.get("http://localhost:5000/api/questions");
+    };
+
+    this.calculateScore = function(questions, answers) {
+        var score = 0;
+        for (var i = 0; i < questions.length; i++) {
+            if (answers[i] === questions[i].answer) {
+                score++;
+            }
+        }
+        return score;
+    };
+});
+
+app.controller("QuizController", function($scope, QuizService) {
+    $scope.questions = [];
+    $scope.answers = {};
+    $scope.score = 0;
+    $scope.submitted = false;
+
+    QuizService.getQuestions()
+        .then(function(response) {
+            $scope.questions = response.data;
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+    $scope.submitQuiz = function() {
+        if ($scope.quizForm.$valid) {
+            $scope.score = QuizService.calculateScore(
+                $scope.questions,
+                $scope.answers
+            );
+            $scope.submitted = true;
+        }
+    };
+
+    $scope.restartQuiz = function() {
+        $scope.answers = {};
+        $scope.score = 0;
+        $scope.submitted = false;
+        $scope.quizForm.$setPristine();
+        $scope.quizForm.$setUntouched();
+    };
+});
+</script>
+</body>
+</html>
